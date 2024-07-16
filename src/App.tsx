@@ -110,8 +110,8 @@ export function App() {
     ['autoClicker05', new UpgradeState(130000, 1.15, 0, 250)],
     ['autoClicker06', new UpgradeState(1400000, 1.15, 0, 1380)],
     ['autoClicker07', new UpgradeState(15, 1.15, 0 , 7600)],
-    ['refClicker01', new UpgradeState(15, 1.15, 0 , 7)],
-    ['refClicker02', new UpgradeState(35, 1.15, 0 , 7)],
+    ['refClicker01', new UpgradeState(15, 1.15, 0 , 1)],
+    ['refClicker02', new UpgradeState(35, 1.15, 0 , 2)],
   ]));
 
   const upgradeEnergyMap = useRef(new Map<string, UpgradeEnergy>([
@@ -313,7 +313,7 @@ export function App() {
                   <RefUpgradeButton
                     id="refClicker01"
                     name="REfer01"
-                    refshow={2}
+                    refshow={1}
                     level={upgradeMap.current.get('refClicker01')!.level}
                     cost={upgradeMap.current.get('refClicker01')!.currentCost}
                     increment={upgradeMap.current.get('refClicker01')!.incrementAdd}
@@ -323,9 +323,9 @@ export function App() {
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                     />
                      <RefUpgradeButton
-                    id="refClicker01"
+                    id="refClicker02"
                     name="REfer02"
-                    refshow={1}
+                    refshow={2}
                     level={upgradeMap.current.get('refClicker02')!.level}
                     cost={upgradeMap.current.get('refClicker02')!.currentCost}
                     increment={upgradeMap.current.get('refClicker02')!.incrementAdd}

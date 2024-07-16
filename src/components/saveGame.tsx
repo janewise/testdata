@@ -31,6 +31,8 @@ export function SaveGame(props: {
     localStorage.setItem("AC5Level", JSON.stringify(props.upgradeMap.current.get('autoClicker05')!.level))
     localStorage.setItem("AC6Level", JSON.stringify(props.upgradeMap.current.get('autoClicker06')!.level))
     localStorage.setItem("AC7Level", JSON.stringify(props.upgradeMap.current.get('autoClicker07')!.level))
+    localStorage.setItem("RC1Level", JSON.stringify(props.upgradeMap.current.get('refClicker01')!.level))
+    localStorage.setItem("RC2Level", JSON.stringify(props.upgradeMap.current.get('refClicker02')!.level))
     // console.log("Game saved");
     localStorage.setItem("pool",JSON.stringify(props.upgradeEnergyMap.current.get('energyPool')!.level))
     localStorage.setItem("refill",JSON.stringify(props.upgradeEnergyMap.current.get('energyfill')!.level))
@@ -48,6 +50,9 @@ export function SaveGame(props: {
     loadUpgrade('autoClicker05', parseInt(JSON.parse(localStorage.getItem("AC5Level") || '0')), props.upgradeMap)
     loadUpgrade('autoClicker06', parseInt(JSON.parse(localStorage.getItem("AC6Level") || '0')), props.upgradeMap)
     loadUpgrade('autoClicker07', parseInt(JSON.parse(localStorage.getItem("AC7Level") || '0')), props.upgradeMap)
+    //ref card
+    loadUpgrade('refClicker01', parseInt(JSON.parse(localStorage.getItem("RC1Level") || '0')), props.upgradeMap)
+    loadUpgrade('refClicker02', parseInt(JSON.parse(localStorage.getItem("RC2Level") || '0')), props.upgradeMap)
      // console.log("Game loaded");
     //loadUpgradeEnergy('energyPool',parseInt(JSON.parse(localStorage.getItem("pool")|| '0')),props.upgradeEnergyMap)
    //loadUpgradeEnergy('energyfill',parseInt(JSON.parse(localStorage.getItem("refill")|| '0')),props.upgradeEnergyMap)
@@ -80,6 +85,10 @@ export function SaveGame(props: {
     loadUpgrade('autoClicker05', parseInt(JSON.parse('0')), props.upgradeMap);
     loadUpgrade('autoClicker06', parseInt(JSON.parse('0')), props.upgradeMap);
     loadUpgrade('autoClicker07', parseInt(JSON.parse('0')), props.upgradeMap);
+    //
+    loadUpgrade('refClicker01', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('refClicker02', parseInt(JSON.parse('0')), props.upgradeMap);
+    //
     loadUpgradeEnergy('energyPool', parseInt(JSON.parse('0')), props.upgradeEnergyMap);
     loadUpgradeEnergy('energyfill', parseInt(JSON.parse('0')), props.upgradeEnergyMap);
     localStorage.removeItem("balanceRef");
@@ -91,6 +100,10 @@ export function SaveGame(props: {
     localStorage.removeItem("AC5Level");
     localStorage.removeItem("AC6Level");
     localStorage.removeItem("AC7Level");
+    //ref card
+    localStorage.removeItem("RC1Level");
+    localStorage.removeItem("RC2Level");
+    //
     localStorage.removeItem("pool");
     localStorage.removeItem("refill");
     props.balanceRef.current.value = parseInt(JSON.parse('0'));
