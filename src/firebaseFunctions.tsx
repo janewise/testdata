@@ -43,7 +43,7 @@ export const initializeUserData = async (userId: string) => {
     await set(userRef, {
       autoIncrement: 0,
       inviteCount: 0, // Initialize inviteCount to 0 when initializing user data
-      timestamp: new Date().toISOString(),
+      // timestamp: new Date().toISOString(),
     });
   }
 };
@@ -92,6 +92,7 @@ export const saveUserDataToFirebase = (userId: string, data: any) => {
     // autoIncrement: data.autoIncrement || 0,
     // inviteCount: data.inviteCount || 0,
     upgrades: {
+      clickUpgrade: data.upgrades?.clickUpgrade || 0,
       autoClicker01: data.upgrades?.autoClicker01 || 0,
       autoClicker02: data.upgrades?.autoClicker02 || 0,
       autoClicker03: data.upgrades?.autoClicker03 || 0,
@@ -99,7 +100,6 @@ export const saveUserDataToFirebase = (userId: string, data: any) => {
       autoClicker05: data.upgrades?.autoClicker05 || 0,
       autoClicker06: data.upgrades?.autoClicker06 || 0,
       autoClicker07: data.upgrades?.autoClicker07 || 0,
-      clickUpgrade: data.upgrades?.clickUpgrade || 0,
       refClicker01: data.upgrades?.refClicker01 || 0,
       refClicker02: data.upgrades?.refClicker02 || 0,
     },
