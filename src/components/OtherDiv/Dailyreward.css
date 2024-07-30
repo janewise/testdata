@@ -1,0 +1,28 @@
+.daily-reward-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  display: inline-block;
+  opacity: 0.5;
+  background-color: black;
+  color: white;
+}
+
+.card.active {
+  background-color: white;
+  opacity: 1;
+  color: black;
+}
+
+/* .card.claimed {
+  background-color: green;
+  opacity: 1;
+  color: white;
+} */
+

@@ -15,6 +15,7 @@ import EnergyFill from "./components/click/energRefill";
 import UpgradePool from "./components/click/poolUpgrade";
 //for Task
 import Task from "./components/OtherDiv/task";
+import Dailyreward from "./components/OtherDiv/dailyreward"
 //for Ref
 import Refer from "./components/OtherDiv/ref";
 //fire base
@@ -33,14 +34,17 @@ export function App() {
 
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Flag to check if initial load is done
 
-  // Load state from localStorage on mount
+  // Load state from localStorage on mount For energy and autoincrement on window close
   useEffect(() => {
     const storedEnergy = localStorage.getItem('energy');
     const storedMaxEnergy = localStorage.getItem('maxEnergy');
     const storedRefillRate = localStorage.getItem('refillRate');
     const storedLastUpdated = localStorage.getItem('lastUpdated');
+//down is for autoincrement
+ const storedBalance = localStorage.getItem('balance');
+ const storedAutoIncrement = localStorage.getItem('autoIncrement');
 
-    if (storedEnergy && storedMaxEnergy && storedRefillRate && storedLastUpdated) {
+    if (storedEnergy && storedMaxEnergy && storedRefillRate && storedLastUpdated && storedBalance && storedAutoIncrement) {
       const timePassed = (Date.now() - parseInt(storedLastUpdated, 10)) / 1000; // time in seconds
       console.log("timePassed (seconds):", timePassed);
 
@@ -53,8 +57,12 @@ export function App() {
       setMaxEnergy(parseInt(storedMaxEnergy, 10));
       setRefillRate(storedRefillRateNum);
       setLastUpdated(Date.now());
-    }
 
+//dowm is for autoincrement time on offline
+    const storedAutoIncrementNum = parseFloat(storedAutoIncrement);
+     const calculatedBalance = parseFloat(storedBalance) + Math.min(storedAutoIncrementNum * timePassed, storedAutoIncrementNum * 7200);
+     balanceRef.current.value = Math.round(calculatedBalance * 100) / 100;
+    }
     setIsInitialLoad(false); // Set initial load flag to false after loading from localStorage
   }, []);
 
@@ -65,6 +73,10 @@ export function App() {
       localStorage.setItem('maxEnergy', maxEnergy.toString());
       localStorage.setItem('refillRate', refillRate.toString());
       localStorage.setItem('lastUpdated', lastUpdated.toString());
+ //down is auto increment
+      localStorage.setItem('balance', balanceRef.current.value.toString());
+      localStorage.setItem('autoIncrement', autoIncrement.toString());
+
     }
   }, [energy, maxEnergy, refillRate, lastUpdated, isInitialLoad]);
   useEffect(() => {
@@ -201,11 +213,6 @@ export function App() {
     forceUpdate(); // Force an update to reflect the new balance
   };
 
-
-//
-//
-
-
   return (
     <>
       <div className="overlay">
@@ -226,11 +233,13 @@ export function App() {
                 autoIncrement={autoIncrement}
                 refillRate={refillRate}
               />
-              <SaveGame 
-                balanceRef={balanceRef}
-                upgradeMap={upgradeMap}
-               upgradeEnergyMap={upgradeEnergyMap} 
-              />
+             <SaveGame 
+  balanceRef={balanceRef}
+  upgradeMap={upgradeMap}
+  upgradeEnergyMap={upgradeEnergyMap}
+  userId={userId} 
+/>
+
             </div>
             {/* 1r first row */}
             <div className="col-md-12 col-lg-7">
@@ -412,6 +421,12 @@ export function App() {
                 onRewardClaimed={handleRewardClaimed}
               />
             </div>
+          </div>
+          <div className="dailyreward">
+              <Dailyreward
+                balanceRef={balanceRef}
+                onRewardClaimed={handleRewardClaimed}
+              />
           </div>
           {/* 4th row for Ref */}
           <div className="Ref_box">
