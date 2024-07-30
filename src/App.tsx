@@ -233,12 +233,12 @@ export function App() {
                 autoIncrement={autoIncrement}
                 refillRate={refillRate}
               />
-             <SaveGame 
+            {userId && <SaveGame
   balanceRef={balanceRef}
   upgradeMap={upgradeMap}
   upgradeEnergyMap={upgradeEnergyMap}
   userId={userId} 
- />
+ />}
 
             </div>
             {/* 1r first row */}

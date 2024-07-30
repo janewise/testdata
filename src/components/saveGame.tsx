@@ -196,7 +196,7 @@ export function SaveGame(props: {
   balanceRef: React.MutableRefObject<{ value: number; }>,
   upgradeMap: React.MutableRefObject<Map<string, UpgradeState>>,
   upgradeEnergyMap: React.MutableRefObject<Map<string, UpgradeEnergy>>, 
-  userId: string|null  // Assuming you're passing userId as a prop
+  userId: string  // Assuming you're passing userId as a prop
 }) {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
