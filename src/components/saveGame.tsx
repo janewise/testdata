@@ -174,12 +174,11 @@
 //   //}
 //   upgradeEnergyMap.current.get(id)!.loadUpgrade(level);
 // }
-
 import { Button, Box, Typography, Modal, Snackbar } from '@mui/material';
 import UpgradeState from "../classes/upgradeState";
 import React, { useEffect, useRef } from 'react';
 import UpgradeEnergy from '../classes/upgradeEnergy';
-import { getDatabase, ref, set, get } from "firebase/database";
+import { saveUserDataToFirebase } from '../firebaseFunctions'; // Import your Firebase function
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -193,104 +192,113 @@ const style = {
   p: 3,
 };
 
-interface SaveGameProps {
-  balanceRef: React.MutableRefObject<{ value: number; }>;
-  upgradeMap: React.MutableRefObject<Map<string, UpgradeState>>;
-  upgradeEnergyMap: React.MutableRefObject<Map<string, UpgradeEnergy>>;
-  userId: string | null;
-}
-
-export function SaveGame(props: SaveGameProps) {
-  const { balanceRef, upgradeMap, upgradeEnergyMap, userId } = props;
+export function SaveGame(props: {
+  balanceRef: React.MutableRefObject<{ value: number; }>,
+  upgradeMap: React.MutableRefObject<Map<string, UpgradeState>>,
+  upgradeEnergyMap: React.MutableRefObject<Map<string, UpgradeEnergy>>, 
+  userId: string|null  // Assuming you're passing userId as a prop
+}) {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const db = getDatabase();
 
   function handleSave() {
-    const upgrades: { [key: string]: number } = {};
-    const upgradeEnergy: { [key: string]: number } = {};
+    // Save data to local storage
+    localStorage.setItem("balanceRef", JSON.stringify(props.balanceRef.current.value));
+    localStorage.setItem("Upgradeclick", JSON.stringify(props.upgradeMap.current.get('clickUpgrade')!.level));
+    localStorage.setItem("AC1Level", JSON.stringify(props.upgradeMap.current.get('autoClicker01')!.level));
+    localStorage.setItem("AC2Level", JSON.stringify(props.upgradeMap.current.get('autoClicker02')!.level));
+    localStorage.setItem("AC3Level", JSON.stringify(props.upgradeMap.current.get('autoClicker03')!.level));
+    localStorage.setItem("AC4Level", JSON.stringify(props.upgradeMap.current.get('autoClicker04')!.level));
+    localStorage.setItem("AC5Level", JSON.stringify(props.upgradeMap.current.get('autoClicker05')!.level));
+    localStorage.setItem("AC6Level", JSON.stringify(props.upgradeMap.current.get('autoClicker06')!.level));
+    localStorage.setItem("AC7Level", JSON.stringify(props.upgradeMap.current.get('autoClicker07')!.level));
+    localStorage.setItem("RC1Level", JSON.stringify(props.upgradeMap.current.get('refClicker01')!.level));
+    localStorage.setItem("RC2Level", JSON.stringify(props.upgradeMap.current.get('refClicker02')!.level));
+    localStorage.setItem("pool", JSON.stringify(props.upgradeEnergyMap.current.get('energyPool')!.level));
+    localStorage.setItem("refill", JSON.stringify(props.upgradeEnergyMap.current.get('energyfill')!.level));
 
-    upgradeMap.current.forEach((value, key) => {
-      upgrades[key] = value.level;
-    });
-
-    upgradeEnergyMap.current.forEach((value, key) => {
-      upgradeEnergy[key] = value.level;
-    });
-
-    const userData = {
-      balance: balanceRef.current.value,
-      upgrades,
-      upgradeEnergy,
+    // Prepare data for Firebase
+    const firebaseData = {
+      balance: props.balanceRef.current.value,
+      upgrades: {
+        clickUpgrade: props.upgradeMap.current.get('clickUpgrade')!.level,
+        autoClicker01: props.upgradeMap.current.get('autoClicker01')!.level,
+        autoClicker02: props.upgradeMap.current.get('autoClicker02')!.level,
+        autoClicker03: props.upgradeMap.current.get('autoClicker03')!.level,
+        autoClicker04: props.upgradeMap.current.get('autoClicker04')!.level,
+        autoClicker05: props.upgradeMap.current.get('autoClicker05')!.level,
+        autoClicker06: props.upgradeMap.current.get('autoClicker06')!.level,
+        autoClicker07: props.upgradeMap.current.get('autoClicker07')!.level,
+        refClicker01: props.upgradeMap.current.get('refClicker01')!.level,
+        refClicker02: props.upgradeMap.current.get('refClicker02')!.level,
+      },
+      upgradeEnergy: {
+        energyPool: props.upgradeEnergyMap.current.get('energyPool')!.level,
+        energyFill: props.upgradeEnergyMap.current.get('energyfill')!.level,
+      },
+      lastUpdated: new Date().getTime(),
     };
 
-    set(ref(db, 'users/' + userId), userData)
-      .then(() => {
-        setOpenSnackbar(true);
-      })
-      .catch((error) => {
-        console.error("Error saving data: ", error);
-      });
+    // Save data to Firebase
+    saveUserDataToFirebase(props.userId, firebaseData);
+
+    setOpenSnackbar(true);
   }
 
   function handleLoad() {
-    const userRef = ref(db, 'users/' + userId);
-
-    get(userRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        balanceRef.current.value = data.balance;
-
-        Object.keys(data.upgrades).forEach((key) => {
-          loadUpgrade(key, data.upgrades[key], upgradeMap);
-        });
-
-        Object.keys(data.upgradeEnergy).forEach((key) => {
-          loadUpgradeEnergy(key, data.upgradeEnergy[key], upgradeEnergyMap);
-        });
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error("Error loading data: ", error);
-    });
+    props.balanceRef.current.value = parseInt(JSON.parse(localStorage.getItem("balanceRef") || '0'));
+    loadUpgrade('clickUpgrade', parseInt(JSON.parse(localStorage.getItem("Upgradeclick") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker01', parseInt(JSON.parse(localStorage.getItem("AC1Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker02', parseInt(JSON.parse(localStorage.getItem("AC2Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker03', parseInt(JSON.parse(localStorage.getItem("AC3Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker04', parseInt(JSON.parse(localStorage.getItem("AC4Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker05', parseInt(JSON.parse(localStorage.getItem("AC5Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker06', parseInt(JSON.parse(localStorage.getItem("AC6Level") || '0')), props.upgradeMap);
+    loadUpgrade('autoClicker07', parseInt(JSON.parse(localStorage.getItem("AC7Level") || '0')), props.upgradeMap);
+    loadUpgrade('refClicker01', parseInt(JSON.parse(localStorage.getItem("RC1Level") || '0')), props.upgradeMap);
+    loadUpgrade('refClicker02', parseInt(JSON.parse(localStorage.getItem("RC2Level") || '0')), props.upgradeMap);
   }
 
-  useEffect(() => {
+  useEffect(() => { //loads latest save on app startup
     handleLoad();
     // eslint-disable-next-line
   }, []);
 
   const counter = useRef({ value: 0 });
   counter.current.value += 1;
-  if (counter.current.value >= 10) {
+  if (counter.current.value >= 10) { // Save every 10 units of time (adjust as needed)
     handleSave();
     counter.current.value = 0;
   }
 
   function wipeSave() {
-    balanceRef.current.value = 0;
-    loadUpgrade('clickUpgrade', 0, upgradeMap);
-    loadUpgrade('autoClicker01', 0, upgradeMap);
-    loadUpgrade('autoClicker02', 0, upgradeMap);
-    loadUpgrade('autoClicker03', 0, upgradeMap);
-    loadUpgrade('autoClicker04', 0, upgradeMap);
-    loadUpgrade('autoClicker05', 0, upgradeMap);
-    loadUpgrade('autoClicker06', 0, upgradeMap);
-    loadUpgrade('autoClicker07', 0, upgradeMap);
-    loadUpgrade('refClicker01', 0, upgradeMap);
-    loadUpgrade('refClicker02', 0, upgradeMap);
-    loadUpgradeEnergy('energyPool', 0, upgradeEnergyMap);
-    loadUpgradeEnergy('energyfill', 0, upgradeEnergyMap);
-
-    set(ref(db, 'users/' + userId), null)
-      .then(() => {
-        console.log("Game wiped");
-        window.location.reload();
-        handleClose();
-      })
-      .catch((error) => {
-        console.error("Error wiping data: ", error);
-      });
+    props.balanceRef.current.value = parseInt(JSON.parse('0'));
+    loadUpgrade('clickUpgrade', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker01', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker02', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker03', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker04', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker05', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker06', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('autoClicker07', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('refClicker01', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgrade('refClicker02', parseInt(JSON.parse('0')), props.upgradeMap);
+    loadUpgradeEnergy('energyPool', parseInt(JSON.parse('0')), props.upgradeEnergyMap);
+    loadUpgradeEnergy('energyfill', parseInt(JSON.parse('0')), props.upgradeEnergyMap);
+    localStorage.removeItem("balanceRef");
+    localStorage.removeItem("Upgradeclick");
+    localStorage.removeItem("AC1Level");
+    localStorage.removeItem("AC2Level");
+    localStorage.removeItem("AC3Level");
+    localStorage.removeItem("AC4Level");
+    localStorage.removeItem("AC5Level");
+    localStorage.removeItem("AC6Level");
+    localStorage.removeItem("AC7Level");
+    localStorage.removeItem("RC1Level");
+    localStorage.removeItem("RC2Level");
+    localStorage.removeItem("pool");
+    localStorage.removeItem("refill");
+    window.location.reload();
+    handleClose();
   }
 
   const [open, setOpen] = React.useState(false);
@@ -306,7 +314,7 @@ export function SaveGame(props: SaveGameProps) {
 
   return (
     <>
-      <Button className='savehide' onClick={handleSave} style={{ margin: "10px 10px 30px 10px" }} variant="contained">Save</Button> <br />
+      <Button className='savehide' onClick={handleSave} style={{ margin: "10px 10px 30px 10px" }} variant="contained">Save</Button><br />
       <Button onClick={handleOpen} size="small" style={{ margin: "10px" }} variant="contained" color="error">Wipe save</Button>
       <Modal
         open={open}
@@ -319,31 +327,32 @@ export function SaveGame(props: SaveGameProps) {
             WARNING
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Do you REALLY want to wipe your save?
+            Are you sure you want to wipe your save? This will delete all of your progress!
           </Typography>
-          <Typography variant='caption'>
-            You will lose your progress, there is no going back!
-          </Typography>
-          <Button onClick={wipeSave}>Yes</Button>
-          <Button onClick={handleClose}>No</Button>
+          <Button size="small" style={{ margin: "10px" }} variant="contained" onClick={wipeSave} color="error">Wipe save</Button>
+          <Button size="small" style={{ margin: "10px" }} variant="contained" onClick={handleClose} color="primary">Cancel</Button>
         </Box>
       </Modal>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message="Game saved"
+      />
     </>
   );
 }
 
-const loadUpgrade = (
-  id: string,
-  level: number,
-  upgradeMap: React.MutableRefObject<Map<string, UpgradeState>>,
-): void => {
-  upgradeMap.current.get(id)!.loadUpgrade(level);
+function loadUpgrade(upgradeName: string, level: number, upgradeMap: React.MutableRefObject<Map<string, UpgradeState>>) {
+  const upgrade = upgradeMap.current.get(upgradeName);
+  if (upgrade) {
+    upgrade.loadUpgrade(level);
+  }
 }
 
-const loadUpgradeEnergy = (
-  id: string,
-  level: number,
-  upgradeEnergyMap: React.MutableRefObject<Map<string, UpgradeEnergy>>,
-): void => {
-  upgradeEnergyMap.current.get(id)!.loadUpgrade(level);
+function loadUpgradeEnergy(upgradeName: string, level: number, upgradeMap: React.MutableRefObject<Map<string, UpgradeEnergy>>) {
+  const upgrade = upgradeMap.current.get(upgradeName);
+  if (upgrade) {
+    upgrade.loadUpgrade(level);
+  }
 }
