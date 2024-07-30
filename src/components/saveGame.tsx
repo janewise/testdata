@@ -328,12 +328,6 @@ export function SaveGame(props: SaveGameProps) {
           <Button onClick={handleClose}>No</Button>
         </Box>
       </Modal>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={2000}
-        onClose={handleCloseSnackbar}
-        message="Game saved"
-      />
     </>
   );
 }
