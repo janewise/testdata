@@ -16,10 +16,13 @@ import UpgradePool from "./components/click/poolUpgrade";
 //for Task
 import Task from "./components/OtherDiv/task";
 import Dailyreward from "./components/OtherDiv/dailyreward"
+import Airtask from "./components/OtherDiv/airtask";
+import Airtwo from "./components/OtherDiv/airtwo";
 //for Ref
 import Refer from "./components/OtherDiv/ref";
 //fire base
 import { sendUserDataToFirebase,updateUserAutoIncrementInFirebase} from './firebaseFunctions';
+
 
 export function App() {
   const balanceRef = useRef({ value: 0 });
@@ -233,12 +236,14 @@ export function App() {
                 autoIncrement={autoIncrement}
                 refillRate={refillRate}
               />
-            {userId && <SaveGame
+            {/* {userId &&  */}
+            <SaveGame
   balanceRef={balanceRef}
   upgradeMap={upgradeMap}
   upgradeEnergyMap={upgradeEnergyMap}
   userId={userId} 
- />}
+ />
+ {/* } */}
 
             </div>
             {/* 1r first row */}
@@ -427,6 +432,14 @@ export function App() {
                 balanceRef={balanceRef}
                 onRewardClaimed={handleRewardClaimed}
               />
+          </div>
+          <div className="airtask">
+          {/* {userId && <Airtask userId={userId}/> } */}
+          <Airtask userId={userId} onRewardClaimed={handleRewardClaimed}   balanceRef={balanceRef}/>
+          </div>
+          <div className="airtask">
+          {/* {userId && <Airtask userId={userId}/> } */}
+          <Airtwo userId={userId} onRewardClaimed={handleRewardClaimed}   balanceRef={balanceRef}/>
           </div>
           {/* 4th row for Ref */}
           <div className="Ref_box">
