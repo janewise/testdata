@@ -522,12 +522,12 @@ export function SaveGame(props: {
           <Button size="small" style={{ margin: "10px" }} variant="contained" onClick={handleClose} color="primary">Cancel</Button>
         </Box>
       </Modal>
-      <Snackbar
+      {/* <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         message="Game saved"
-      />
+      /> */}
     </>
   );
 }

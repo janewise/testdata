@@ -18,6 +18,7 @@ import Task from "./components/OtherDiv/task";
 import Dailyreward from "./components/OtherDiv/dailyreward"
 import Airtask from "./components/OtherDiv/airtask";
 import Airtwo from "./components/OtherDiv/airtwo";
+import Exchange from "./exchange";
 //for Ref
 import Refer from "./components/OtherDiv/ref";
 //fire base
@@ -34,7 +35,8 @@ export function App() {
   const [lastUpdated, setLastUpdated] = useState(Date.now());
    //user
   const [userId, setUserId] = useState<string | null>(null);
-
+//  exchange
+//const [autoIncrement, setAutoIncrement] = useState<number>();
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Flag to check if initial load is done
 
   // Load state from localStorage on mount For energy and autoincrement on window close
@@ -134,6 +136,7 @@ export function App() {
     ['energyfill', new UpgradeEnergy(70, 2,0, 1)],
   ]));
 
+  
   let autoIncrement: number = Math.round(
     ( upgradeMap.current.get('autoClicker01')!.increment +
       upgradeMap.current.get('autoClicker02')!.increment +
@@ -145,6 +148,29 @@ export function App() {
       upgradeMap.current.get('refClicker01')!.increment +
       upgradeMap.current.get('refClicker02')!.increment
     ) * 100) / 100;
+  // Calculate autoIncrement dynamically
+  // useEffect(() => {
+  //   const calculatedAutoIncrement = Math.round(
+  //     (upgradeMap.current.get('autoClicker01')!.increment +
+  //       upgradeMap.current.get('autoClicker02')!.increment +
+  //       upgradeMap.current.get('autoClicker03')!.increment +
+  //       upgradeMap.current.get('autoClicker04')!.increment +
+  //       upgradeMap.current.get('autoClicker05')!.increment +
+  //       upgradeMap.current.get('autoClicker06')!.increment +
+  //       upgradeMap.current.get('autoClicker07')!.increment +
+  //       upgradeMap.current.get('refClicker01')!.increment +
+  //       upgradeMap.current.get('refClicker02')!.increment) * 100
+  //   ) / 100;
+  //   setAutoIncrement(calculatedAutoIncrement);
+  //   console.log(`Calculated autoIncrement: ${calculatedAutoIncrement}`);
+  // }, [upgradeMap]);
+
+  // // Handle the exchange of autoIncrement
+  // const handleExchange = (value: number) => {
+  //   const newAutoIncrement = Math.max(autoIncrement - value, 0); // Prevent negative values
+  //   setAutoIncrement(newAutoIncrement);
+  //   console.log(`autoIncrement after exchange: ${newAutoIncrement}`);
+console.log(`this is autoincrent:${autoIncrement} >for me`)
 
     //database
     useEffect(() => {
@@ -233,7 +259,7 @@ export function App() {
               <DisplayStats 
                 balanceRef={balanceRef}
                 clickIncrement={upgradeMap.current.get('clickUpgrade')!.increment}
-                autoIncrement={autoIncrement}
+                autoIncrement={autoIncrement ?? 0}
                 refillRate={refillRate}
               />
             {/* {userId &&  */}
@@ -244,7 +270,7 @@ export function App() {
   userId={userId} 
  />
  {/* } */}
-
+ <Exchange autoIncrement={autoIncrement} userId={userId}/>
             </div>
             {/* 1r first row */}
             <div className="col-md-12 col-lg-7">
@@ -258,7 +284,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker01')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker01')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   /> 
                   <UpgradeButton
@@ -268,7 +294,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker03')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker03')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   /> 
                   <UpgradeButton
@@ -279,7 +305,7 @@ export function App() {
                     increment={upgradeMap.current.get('autoClicker05')!.incrementAdd}
                    
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   />
                   <UpgradeButton
@@ -289,7 +315,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker07')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker07')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   />
                 </div>
@@ -301,7 +327,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker02')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker02')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   /> 
                   <UpgradeButton
@@ -311,7 +337,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker04')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker04')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   />
                   <UpgradeButton
@@ -321,7 +347,7 @@ export function App() {
                     cost={upgradeMap.current.get('autoClicker06')!.currentCost}
                     increment={upgradeMap.current.get('autoClicker06')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                   />
                   <RefUpgradeButton
@@ -332,7 +358,7 @@ export function App() {
                     cost={upgradeMap.current.get('refClicker01')!.currentCost}
                     increment={upgradeMap.current.get('refClicker01')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     userId={userId}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                     />
@@ -344,7 +370,7 @@ export function App() {
                     cost={upgradeMap.current.get('refClicker02')!.currentCost}
                     increment={upgradeMap.current.get('refClicker02')!.incrementAdd}
                     balance={balanceRef.current.value}
-                    autoIncrementTotal={autoIncrement}
+                    autoIncrementTotal={autoIncrement ?? 0}
                     userId={userId}
                     clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
                     />
@@ -363,7 +389,7 @@ export function App() {
                 cost={upgradeMap.current.get('clickUpgrade')!.currentCost}
                 increment={upgradeMap.current.get('clickUpgrade')!.incrementAdd}
                 balance={balanceRef.current.value}
-                autoIncrementTotal={autoIncrement}
+                autoIncrementTotal={autoIncrement ?? 0}
                 clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
               /> 
             </div>
@@ -376,7 +402,7 @@ export function App() {
                 cost={upgradeEnergyMap.current.get('energyfill')!.currentCost}
                 increment={upgradeEnergyMap.current.get('energyfill')!.energyRefillIncrement}
                 balance={balanceRef.current.value}
-                autoIncrementTotal={autoIncrement}
+                autoIncrementTotal={autoIncrement ?? 0}
                 clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
               /> 
             </div>
@@ -388,7 +414,7 @@ export function App() {
               cost={upgradeEnergyMap.current.get('energyPool')!.currentCost}
               increment={upgradeEnergyMap.current.get('energyPool')!.maxEnergyIncrement}
               balance={balanceRef.current.value}
-              autoIncrementTotal={autoIncrement}
+              autoIncrementTotal={autoIncrement ?? 0}
               clickHandler={(id) => { upgradeInvocationHandler(id, upgradeMap, upgradeEnergyMap, balanceRef, setMaxEnergy, setRefillRate); }}
             />
             </div>

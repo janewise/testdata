@@ -4,6 +4,7 @@ import { ref, set, update, get, DataSnapshot } from 'firebase/database';
 export const sendUserDataToFirebase = (userId: string, autoIncrement: number, initialInviteCount: number = 0) => {
   if (!userId) return;
 
+ // first 
   const userRef = ref(db, 'users/' + userId);
   get(userRef).then((snapshot) => {
     if (!snapshot.exists()) {
@@ -19,7 +20,7 @@ export const sendUserDataToFirebase = (userId: string, autoIncrement: number, in
     console.error("Error fetching user data:", error);
   });
 };
-
+//autoincrement
 export const updateUserAutoIncrementInFirebase = (userId: string, autoIncrement: number) => {
   if (!userId) return;
 
@@ -27,7 +28,7 @@ export const updateUserAutoIncrementInFirebase = (userId: string, autoIncrement:
     autoIncrement: autoIncrement,
   });
 };
-
+//invitecount
 export const updateUserInviteCountInFirebase = async (userId: string, inviteCount: number) => {
   if (!userId) return;
 
@@ -79,10 +80,7 @@ export const getUserInviteCount = async (userId: string) => {
   // return 0;
 };
 
-
-// import { db } from './firebase';
-// import { ref, set, update, get } from 'firebase/database';
-
+//second
 export const saveUserDataToFirebase = (userId: string, data: any) => {
   if (!userId) return;
 
@@ -111,6 +109,20 @@ export const saveUserDataToFirebase = (userId: string, data: any) => {
   });
 };
 
+//third
+export function sendExchangeAmountToFirebase(userId: string, exchangeAmount: number) {
+ 
+  const exchangeRef = ref(db, `exchanges/${userId}`);
+  
+  set(exchangeRef, {
+    amount: exchangeAmount,
+    timestamp: new Date().toISOString()
+  }).then(() => {
+    console.log('Exchange amount saved successfully.');
+  }).catch((error) => {
+    console.error('Error saving exchange amount:', error);
+  });
+}
 
 
 // import { db } from './firebase';
