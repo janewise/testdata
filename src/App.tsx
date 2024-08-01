@@ -126,7 +126,7 @@ const [totalExchange, setTotalExchange] = useState<number>(0); // State for tota
     getLatestExchangeAmount(userId).then(amount => {
       setTotalExchange(amount);
     }).catch(error => {
-      console.error("Error fetching exchange amount:", error);
+      alert( error);
     });
   }
 }, [userId]);
