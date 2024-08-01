@@ -22,7 +22,7 @@ import Exchange from "./exchange";
 //for Ref
 import Refer from "./components/OtherDiv/ref";
 //fire base
-import { sendUserDataToFirebase,updateUserAutoIncrementInFirebase} from './firebaseFunctions';
+import { sendUserDataToFirebase,updateUserAutoIncrementInFirebase,getLatestExchangeAmount} from './firebaseFunctions';
 
 
 export function App() {
@@ -36,6 +36,7 @@ export function App() {
    //user
   const [userId, setUserId] = useState<string | null>(null);
 //  exchange
+const [totalExchange, setTotalExchange] = useState<number>(0); // State for total exchange amount
 //const [autoIncrement, setAutoIncrement] = useState<number>();
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Flag to check if initial load is done
 
@@ -118,6 +119,18 @@ export function App() {
   
 //up is user
 
+//
+ // Fetch the latest exchange amount
+ useEffect(() => {
+  if (userId) {
+    getLatestExchangeAmount(userId).then(amount => {
+      setTotalExchange(amount);
+    }).catch(error => {
+      console.error("Error fetching exchange amount:", error);
+    });
+  }
+}, [userId]);
+//
   const upgradeMap = useRef(new Map<string, UpgradeState>([
     ['clickUpgrade', new UpgradeState(15, 1.1, 1, 1)],
     ['autoClicker01', new UpgradeState(80, 1.15, 0, 1)],
@@ -147,7 +160,9 @@ export function App() {
       upgradeMap.current.get('autoClicker07')!.increment +
       upgradeMap.current.get('refClicker01')!.increment +
       upgradeMap.current.get('refClicker02')!.increment
-    ) * 100) / 100;
+    ) * 100) / 100 - totalExchange;
+
+
   // Calculate autoIncrement dynamically
   // useEffect(() => {
   //   const calculatedAutoIncrement = Math.round(

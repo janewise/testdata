@@ -158,6 +158,19 @@ export function sendExchangeAmountToFirebase(userId: string, exchangeAmount: num
     console.error('Error fetching exchange amount:', error);
   });
 }
+//for reduce autoincrement
+// Function to get the latest exchange amount for a given userId
+export const getLatestExchangeAmount = async (userId: string): Promise<number> => {
+  const exchangeRef = ref(db, `exchanges/${userId}`);
+  const snapshot = await get(exchangeRef);
+
+  if (snapshot.exists()) {
+    const exchangeData = snapshot.val();
+    return exchangeData.amount || 0; // Return amount or 0 if not available
+  } else {
+    return 0; // Return 0 if no exchange data exists
+  }
+};
 
 
 // import { db } from './firebase';
