@@ -104,7 +104,6 @@
 // };
 
 // export default Exchange;
-
 import React, { useState } from 'react';
 import { sendExchangeAmountToFirebase } from './firebaseFunctions'; // Import your Firebase function
 
@@ -115,28 +114,32 @@ interface ExchangeProps {
 
 const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
   const [inputValue, setInputValue] = useState<number | string>('');
+  const [error, setError] = useState<string | null>(null); // State for error message
+  const [success, setSuccess] = useState<boolean>(false); // State for success feedback
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     if (!isNaN(value) && value >= 0) {
       setInputValue(value);
+      setError(null); // Clear error if input is valid
     } else {
-      setInputValue('');
+      setError('Invalid input. Please enter a positive number.');
     }
   };
 
   const handleExchange = () => {
     const value = parseFloat(inputValue.toString());
-    if (value <= autoIncrement) {
-      // Send the exchange amount to Firebase
-      if (userId) {
-        sendExchangeAmountToFirebase(userId, value);
-      } else {
-        alert('User ID is not available.');
-      }
+    if (value > autoIncrement) {
+      setError('Input value exceeds the current autoIncrement');
+      return;
+    }
+
+    if (userId) {
+      sendExchangeAmountToFirebase(userId, value);
       setInputValue(''); // Reset the input after a successful exchange
+      setSuccess(true); // Set success feedback
     } else {
-      alert('Input value exceeds the current autoIncrement');
+      setError('User ID is not available.');
     }
   };
 
@@ -149,6 +152,7 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
         onChange={handleInputChange}
         placeholder="Enter amount to exchange"
         min="0"
+        step="0.1"
         max={autoIncrement}
       />
       <button
@@ -157,6 +161,8 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
       >
         Exchange
       </button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && !error && <p style={{ color: 'green' }}>Exchange successful!</p>}
     </div>
   );
 };
