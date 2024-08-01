@@ -90,7 +90,6 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
         onChange={handleInputChange}
         placeholder="Enter amount to exchange"
         min="0"
-        step="0.1"
         max={autoIncrement}
       />
       <button

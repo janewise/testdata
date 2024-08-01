@@ -110,20 +110,48 @@ export const saveUserDataToFirebase = (userId: string, data: any) => {
 };
 
 //third
-export function sendExchangeAmountToFirebase(userId: string, exchangeAmount: number) {
- 
-  const exchangeRef = ref(db, `exchanges/${userId}`);
-  
-  set(exchangeRef, {
-    amount: exchangeAmount,
-    timestamp: new Date().toISOString()
-  }).then(() => {
-    console.log('Exchange amount saved successfully.');
-  }).catch((error) => {
-    console.error('Error saving exchange amount:', error);
-  });
-}
+export async function sendExchangeAmountToFirebase(userId: string, exchangeAmount: number) {
+  if (!userId) return;
 
+  // Reference to the exchanges node
+  const exchangesRef = ref(db, `users/${userId}/exchanges`);
+  
+  try {
+    // Get existing exchange data
+    const snapshot = await get(exchangesRef);
+
+    let currentTotal = 0;
+
+    if (snapshot.exists()) {
+      // Calculate the current total exchange amount
+      const existingExchanges = snapshot.val();
+      for (const key in existingExchanges) {
+        if (existingExchanges[key].amount) {
+          currentTotal += existingExchanges[key].amount;
+        }
+      }
+    }
+
+    // Add new exchange amount to the existing total
+    const newTotal = currentTotal + exchangeAmount;
+
+    // Save the updated exchange data with a new entry
+    const newExchangeRef = ref(db, `users/${userId}/exchanges/${new Date().toISOString()}`);
+    
+    await set(newExchangeRef, {
+      amount: exchangeAmount,
+      timestamp: new Date().toISOString()
+    });
+
+    // Optionally, you can update the cumulative total if desired
+    // const totalRef = ref(db, `users/${userId}/totalExchange`);
+    // await update(totalRef, { amount: newTotal });
+
+    console.log('Exchange amount saved successfully.');
+  } catch (error) {
+    console.error('Error saving exchange amount:', error);
+  }
+}
 
 // import { db } from './firebase';
 // import { ref, set, update, get } from 'firebase/database';
