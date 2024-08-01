@@ -287,6 +287,7 @@ console.log(`this is autoincrent:${autoIncrement} >for me`)
  {/* } */}
  <Exchange autoIncrement={autoIncrement} userId={userId}/>
             </div>
+            <h1>{totalExchange}</h1>
             {/* 1r first row */}
             <div className="col-md-12 col-lg-7">
               <h1>Upgrades</h1>
