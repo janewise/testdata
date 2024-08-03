@@ -36,7 +36,7 @@ export function App() {
    //user
   const [userId, setUserId] = useState<string | null>(null);
 //  exchange
-const [totalExchange, setTotalExchange] = useState<number>(0); // State for total exchange amount
+const [totalExchange, setTotalExchange] = useState<number>(0.1); // State for total exchange amount
 //const [autoIncrement, setAutoIncrement] = useState<number>();
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Flag to check if initial load is done
 
