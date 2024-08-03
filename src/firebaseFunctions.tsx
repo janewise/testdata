@@ -162,14 +162,21 @@ export function sendExchangeAmountToFirebase(userId: string, exchangeAmount: num
 // Function to get the latest exchange amount for a given userId
 export const getLatestExchangeAmount = async (userId: string): Promise<number> => {
   try {
-    const exchangeRef = ref(db, `exchanges/${userId}`);
+    const exchangeRef = ref(db, `users/${userId}/exchanges`);
     const snapshot = await get(exchangeRef);
 
     if (snapshot.exists()) {
       const exchangeData = snapshot.val();
-      const amount = exchangeData.amount || 0;
-      alert(`Successfully fetched exchange amount: ${amount}`);
-      return amount;
+      alert(`Snapshot exists. Data: ${JSON.stringify(exchangeData)}`);
+
+      if (exchangeData && exchangeData.amount !== undefined) {
+        const amount = exchangeData.amount;
+        alert(`Successfully fetched exchange amount: ${amount}`);
+        return amount;
+      } else {
+        alert("Exchange amount field not found, returning 0.");
+        return 0;
+      }
     } else {
       alert("No exchange data found, returning 0.");
       return 0; // Return 0 if no exchange data exists
@@ -179,6 +186,7 @@ export const getLatestExchangeAmount = async (userId: string): Promise<number> =
     return 0; // Return 0 in case of error
   }
 };
+
 
 
 
