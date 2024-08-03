@@ -23,7 +23,8 @@ import Exchange from "./exchange";
 import Refer from "./components/OtherDiv/ref";
 //fire base
 import { sendUserDataToFirebase,updateUserAutoIncrementInFirebase,getLatestExchangeAmount} from './firebaseFunctions';
-
+import { db } from './firebase';
+import { ref, onValue } from "firebase/database";
 
 export function App() {
   const balanceRef = useRef({ value: 0 });
@@ -121,16 +122,30 @@ const [totalExchange, setTotalExchange] = useState<number>(0.1); // State for to
 
 //
  // Fetch the latest exchange amount
- useEffect(() => {
+//  useEffect(() => {
+//   if (userId) {
+//     getLatestExchangeAmount(userId)
+//       .then(amount => {
+//         setTotalExchange(amount);
+//         alert("Exchange amount fetched successfully: " + amount);
+//       })
+//       .catch(error => {
+//         alert("Error fetching exchange amount: " + error);
+//       });
+//   }
+// }, [userId]);
+useEffect(() => {
   if (userId) {
-    getLatestExchangeAmount(userId)
-      .then(amount => {
-        setTotalExchange(amount);
-        alert("Exchange amount fetched successfully: " + amount);
-      })
-      .catch(error => {
-        alert("Error fetching exchange amount: " + error);
-      });
+    const exchangeRef = ref(db, `users/${userId}/exchanges/amount`);
+
+    const unsubscribe = onValue(exchangeRef, (snapshot) => {
+      const amount = snapshot.val();
+      setTotalExchange(amount || 0);
+      alert(`Exchange amount updated: ${amount}`);
+    });
+
+    // Cleanup the subscription on unmount
+    return () => unsubscribe();
   }
 }, [userId]);
 //

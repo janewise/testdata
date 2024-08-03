@@ -189,7 +189,6 @@ export const getLatestExchangeAmount = async (userId: string): Promise<number> =
 
 
 
-
 // import { db } from './firebase';
 // import { ref, set, update, get } from 'firebase/database';
 
