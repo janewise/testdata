@@ -198,7 +198,7 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
   };
 
   const handleExchange = () => {
-    if (inputValue > autoIncrement) {
+    if (inputValue > autoIncrement*3600) {
       setError('Input value exceeds the current autoIncrement');
       return;
     }
