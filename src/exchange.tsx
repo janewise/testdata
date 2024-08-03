@@ -182,11 +182,11 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
   const [success, setSuccess] = useState<boolean>(false); // State for success feedback
 
   const handlePlus = () => {
-    setInputValue(prevValue => Math.min(prevValue + 0.1, Math.floor(autoIncrement)));
+    setInputValue(prevValue => Math.min(prevValue + 360, Math.floor(autoIncrement*3600)));
   };
 
   const handleMinus = () => {
-    setInputValue(prevValue => Math.max(prevValue - 0.1, 0));
+    setInputValue(prevValue => Math.max(prevValue - 360, 0));
   };
 
   const handleMax = () => {
@@ -225,7 +225,7 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
         <button onClick={handleMinus} disabled={inputValue <= 0}>
           -
         </button>
-        <button onClick={handlePlus} disabled={inputValue >= autoIncrement}>
+        <button onClick={handlePlus} disabled={inputValue >= autoIncrement*3600}>
           +
         </button>
         <button onClick={handleMax}>Max</button>

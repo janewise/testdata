@@ -178,7 +178,7 @@ useEffect(() => {
       upgradeMap.current.get('autoClicker07')!.increment +
       upgradeMap.current.get('refClicker01')!.increment +
       upgradeMap.current.get('refClicker02')!.increment
-    ) * 100) / 100 - totalExchange;
+    ) * 100) / 100 - (totalExchange/3600);
 
 console.log(`this is autoincrent:${autoIncrement} >for me`)
 
