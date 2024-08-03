@@ -162,29 +162,6 @@ const [totalExchange, setTotalExchange] = useState<number>(0); // State for tota
       upgradeMap.current.get('refClicker02')!.increment
     ) * 100) / 100 - totalExchange;
 
-
-  // Calculate autoIncrement dynamically
-  // useEffect(() => {
-  //   const calculatedAutoIncrement = Math.round(
-  //     (upgradeMap.current.get('autoClicker01')!.increment +
-  //       upgradeMap.current.get('autoClicker02')!.increment +
-  //       upgradeMap.current.get('autoClicker03')!.increment +
-  //       upgradeMap.current.get('autoClicker04')!.increment +
-  //       upgradeMap.current.get('autoClicker05')!.increment +
-  //       upgradeMap.current.get('autoClicker06')!.increment +
-  //       upgradeMap.current.get('autoClicker07')!.increment +
-  //       upgradeMap.current.get('refClicker01')!.increment +
-  //       upgradeMap.current.get('refClicker02')!.increment) * 100
-  //   ) / 100;
-  //   setAutoIncrement(calculatedAutoIncrement);
-  //   console.log(`Calculated autoIncrement: ${calculatedAutoIncrement}`);
-  // }, [upgradeMap]);
-
-  // // Handle the exchange of autoIncrement
-  // const handleExchange = (value: number) => {
-  //   const newAutoIncrement = Math.max(autoIncrement - value, 0); // Prevent negative values
-  //   setAutoIncrement(newAutoIncrement);
-  //   console.log(`autoIncrement after exchange: ${newAutoIncrement}`);
 console.log(`this is autoincrent:${autoIncrement} >for me`)
 
     //database
@@ -284,7 +261,7 @@ console.log(`this is autoincrent:${autoIncrement} >for me`)
   upgradeEnergyMap={upgradeEnergyMap}
   userId={userId} 
  />
- {/* } */}
+
  <Exchange autoIncrement={autoIncrement} userId={userId}/>
             </div>
             <h1>{totalExchange}</h1>
@@ -493,6 +470,37 @@ console.log(`this is autoincrent:${autoIncrement} >for me`)
     </>
   )
 }
+
+
+
+
+//
+  // Calculate autoIncrement dynamically
+  // useEffect(() => {
+  //   const calculatedAutoIncrement = Math.round(
+  //     (upgradeMap.current.get('autoClicker01')!.increment +
+  //       upgradeMap.current.get('autoClicker02')!.increment +
+  //       upgradeMap.current.get('autoClicker03')!.increment +
+  //       upgradeMap.current.get('autoClicker04')!.increment +
+  //       upgradeMap.current.get('autoClicker05')!.increment +
+  //       upgradeMap.current.get('autoClicker06')!.increment +
+  //       upgradeMap.current.get('autoClicker07')!.increment +
+  //       upgradeMap.current.get('refClicker01')!.increment +
+  //       upgradeMap.current.get('refClicker02')!.increment) * 100
+  //   ) / 100;
+  //   setAutoIncrement(calculatedAutoIncrement);
+  //   console.log(`Calculated autoIncrement: ${calculatedAutoIncrement}`);
+  // }, [upgradeMap]);
+
+  // // Handle the exchange of autoIncrement
+  // const handleExchange = (value: number) => {
+  //   const newAutoIncrement = Math.max(autoIncrement - value, 0); // Prevent negative values
+  //   setAutoIncrement(newAutoIncrement);
+  //   console.log(`autoIncrement after exchange: ${newAutoIncrement}`);
+//
+
+//
+
 
 
 //

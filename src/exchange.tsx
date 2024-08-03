@@ -120,16 +120,17 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     if (!isNaN(value) && value >= 0) {
-      setInputValue(value);
+      setInputValue(value%3600);
       setError(null); // Clear error if input is valid
-    } else {
+    } 
+    else {
       setError('Invalid input. Please enter a positive number.');
     }
   };
 
   const handleExchange = () => {
     const value = parseFloat(inputValue.toString());
-    if (value > autoIncrement) {
+    if (value > autoIncrement*3600) {
       setError('Input value exceeds the current autoIncrement');
       return;
     }
@@ -147,17 +148,17 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
     <div>
       <h3>Exchange AutoIncrement</h3>
       <input
-        type="number"
+        type="string"
         value={inputValue}
         onChange={handleInputChange}
         placeholder="Enter amount to exchange"
-        min="0"
-        step="0.1"
-        max={autoIncrement}
+        min="360"
+        step="360"
+        max={autoIncrement*3600}
       />
       <button
         onClick={handleExchange}
-        disabled={!inputValue || parseFloat(inputValue.toString()) > autoIncrement}
+        disabled={!inputValue || parseFloat(inputValue.toString()) > autoIncrement*3600}
       >
         Exchange
       </button>
