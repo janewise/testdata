@@ -121,11 +121,12 @@ const [totalExchange, setTotalExchange] = useState<number>(0); // State for tota
 
 //
  // Fetch the latest exchange amount
-useEffect(() => {
+ useEffect(() => {
   if (userId) {
     getLatestExchangeAmount(userId)
       .then(amount => {
         setTotalExchange(amount);
+        alert("Exchange amount fetched successfully: " + amount);
       })
       .catch(error => {
         alert("Error fetching exchange amount: " + error);
