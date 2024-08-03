@@ -190,7 +190,7 @@ const Exchange: React.FC<ExchangeProps> = ({ autoIncrement, userId }) => {
   };
 
   const handleMax = () => {
-    setInputValue(Math.floor(autoIncrement));
+    setInputValue(Math.floor(autoIncrement*3600));
   };
 
   const handleCancel = () => {
